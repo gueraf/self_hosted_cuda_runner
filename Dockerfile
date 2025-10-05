@@ -4,7 +4,7 @@ FROM ${BASE_IMAGE}
 
 
 # Expect REPO_HTTPS_URL and REPO_TOKEN to be provided at runtime via docker run -e
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+# COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 # Create a non-root user for running the GitHub Actions runner
 RUN groupadd -r runner && useradd -m -r -g runner runner
