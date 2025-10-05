@@ -7,7 +7,7 @@ FROM ${BASE_IMAGE}
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 # Create a non-root user for running the GitHub Actions runner
-RUN groupadd -r runner && useradd -r -g runner runner
+RUN groupadd -r runner && useradd -m -r -g runner runner
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates libicu-dev jq git && rm -rf /var/lib/apt/lists/* && \
     mkdir actions-runner && \
