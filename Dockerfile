@@ -23,11 +23,12 @@ RUN ./bin/installdependencies.sh
 # Switch to non-root user
 USER runner
 
-ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN && ./run.sh"]
+ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; if [ -n \"$RUNNER_NAME\" ]; then NAME_ARG=\"--name $RUNNER_NAME\"; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN $NAME_ARG && ./run.sh"]
 
 # Usage (persistent background runner; requires env vars & auto restart):
 # docker run -d --restart=always --name gh-runner \
 #   -e REPO_HTTPS_URL=https://github.com/owner/repo \
 #   -e REPO_TOKEN=YOUR_REGISTRATION_TOKEN \
+#   -e RUNNER_NAME=custom-runner-name \
 #   gueraf/self_hosted_cuda_runner:latest
 # (Add '--gpus all' right after 'docker run' if GPU access is needed.)
