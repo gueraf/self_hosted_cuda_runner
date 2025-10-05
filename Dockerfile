@@ -2,11 +2,8 @@ ARG BASE_IMAGE=nvidia/cuda:12.9.1-devel-ubuntu24.04
 
 FROM ${BASE_IMAGE}
 
-ARG repo_https_url
-ARG repo_token
-ENV REPO_HTTPS_URL=${repo_https_url} \
-    REPO_TOKEN=${repo_token}
 
+# Expect REPO_HTTPS_URL and REPO_TOKEN to be provided at runtime via docker run -e
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 RUN mkdir actions-runner && \
@@ -17,6 +14,18 @@ RUN mkdir actions-runner && \
 
 WORKDIR /actions-runner
 
-ENTRYPOINT ["bash","-c","./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN && ./run.sh"]
+ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN && ./run.sh"]
 
 
+
+
+
+
+
+
+# Usage (persistent background runner; requires env vars & auto restart):
+# docker run -d --restart=always --name gh-runner \
+#   -e REPO_HTTPS_URL=https://github.com/owner/repo \
+#   -e REPO_TOKEN=YOUR_REGISTRATION_TOKEN \
+#   gueraf/self_hosted_cuda_runner:latest
+# (Add '--gpus all' right after 'docker run' if GPU access is needed.)
