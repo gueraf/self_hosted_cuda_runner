@@ -9,7 +9,14 @@ FROM ${BASE_IMAGE}
 # Create a non-root user for running the GitHub Actions runner
 RUN groupadd -r runner && useradd -m -r -g runner runner
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates libicu-dev jq git && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      curl \
+      ca-certificates \
+      libicu-dev \
+      jq \
+      git \
+      cmake \
+      && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     mkdir actions-runner && \
     cd actions-runner && \
     curl -o actions-runner-linux-x64-2.328.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.328.0/actions-runner-linux-x64-2.328.0.tar.gz && \
