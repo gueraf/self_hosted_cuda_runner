@@ -16,6 +16,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       jq \
       git \
       cmake \
+      zstd \
+      zlib1g-dev \
       && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     mkdir actions-runner && \
     cd actions-runner && \
