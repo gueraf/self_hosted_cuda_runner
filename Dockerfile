@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       zstd \
       zlib1g-dev \
       libgl1 \
+      libglib2.0-0 \
       && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     mkdir actions-runner && \
     cd actions-runner && \
