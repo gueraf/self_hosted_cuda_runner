@@ -4,10 +4,7 @@ set -euo pipefail
 IMAGE="gueraf/self_hosted_cuda_runner"
 TAG="${1:-latest}"
 
-echo "Building image $IMAGE:$TAG"
-docker build -t "$IMAGE:$TAG" .
-
-echo "Pushing image $IMAGE:$TAG"
-docker push "$IMAGE:$TAG"
+echo "Building and pushing multi-arch image $IMAGE:$TAG for platforms linux/amd64,linux/arm64"
+docker buildx build --platform linux/amd64,linux/arm64 -t "$IMAGE:$TAG" --push .
 
 echo "Done."
