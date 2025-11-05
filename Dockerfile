@@ -13,6 +13,7 @@ ARG TARGETARCH=linux/arm64
 # Create a non-root user for running the GitHub Actions runner
 RUN groupadd -r runner && useradd -m -r -g runner runner
 
+# ffmpeg not avaialble on arm... :(
 RUN apt-get update && apt-get install -y --no-install-recommends \
       curl \
       ca-certificates \
@@ -24,7 +25,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       zlib1g-dev \
       libgl1 \
       libglib2.0-0 \
-      ffmpeg \
       && apt-get clean && rm -rf /var/lib/apt/lists/* && \
     mkdir actions-runner && \
     cd actions-runner && \
