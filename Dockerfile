@@ -5,7 +5,7 @@ FROM ${BASE_IMAGE}
 ARG RUNNER_VERSION=2.329.0
 ARG RUNNER_SHA256_AMD64=194f1e1e4bd02f80b7e9633fc546084d8d4e19f3928a324d512ea53430102e1d
 ARG RUNNER_SHA256_ARM64=56768348b3d643a6a29d4ad71e9bdae0dc0ef1eb01afe0f7a8ee097b039bfaaf
-ARG TARGETARCH
+ARG TARGETARCH=linux/arm64
 
 # Expect REPO_HTTPS_URL and REPO_TOKEN to be provided at runtime via docker run -e
 # COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
