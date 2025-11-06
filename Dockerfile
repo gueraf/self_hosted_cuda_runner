@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       zstd \
       zlib1g-dev \
       libgl1 \
-      libglib2.0-0 \
+      libglib2.0-0 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     case ${TARGETARCH} in \
       amd64) \
@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         rm -rf /tmp/ffmpeg-git-arm64-static.tar.xz /tmp/ffmpeg-git-arm64-static ;; \
       *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
     esac && \
-    RUN ffmpeg -version && \
+    ffmpeg -version && \
     mkdir actions-runner && \
     cd actions-runner && \
     case ${TARGETARCH} in \
