@@ -24,8 +24,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       zlib1g-dev \
       libgl1 \
       libglib2.0-0 \
-      ffmpeg \
-      && apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    case ${TARGETARCH} in \
+      amd64) \
+        apt-get update && apt-get install -y --no-install-recommends ffmpeg && \
+        apt-get clean && rm -rf /var/lib/apt/lists/* ;; \
+      arm64) \
+        curl -L https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-arm64-static.tar.xz -o /tmp/ffmpeg-git-arm64-static.tar.xz && \
+        tar -xf /tmp/ffmpeg-git-arm64-static.tar.xz -C /tmp/ && \
+        mv /tmp/ffmpeg-git-arm64-static/ffmpeg /usr/local/bin/ffmpeg && \
+        mv /tmp/ffmpeg-git-arm64-static/ffprobe /usr/local/bin/ffprobe && \
+        rm -rf /tmp/ffmpeg-git-arm64-static.tar.xz /tmp/ffmpeg-git-arm64-static ;; \
+      *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
+    esac && \
+    RUN ffmpeg -version && \
     mkdir actions-runner && \
     cd actions-runner && \
     case ${TARGETARCH} in \
