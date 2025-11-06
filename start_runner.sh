@@ -1,9 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Pull the latest image before starting the runner
-echo "Pulling latest runner image..."
-docker pull gueraf/self_hosted_cuda_runner:latest
+# Determine architecture and set image tag and runner labels accordingly
+ARCH=$(uname -m)
+IMAGE_TAG="latest"
+RUNNER_TAG_PREFIX="self-hosted"
+RUNNER_LABELS_ARCH="X64" # Default for AMD64
+
+if [[ "$ARCH" == "aarch64" ]]; then
+  IMAGE_TAG="arm"
+  RUNNER_TAG_PREFIX="self-hosted-arm"
+  RUNNER_LABELS_ARCH="ARM64"
+fi
+
+# Pull the appropriate runner image
+echo "Pulling runner image: gueraf/self_hosted_cuda_runner:${IMAGE_TAG}"
+docker pull gueraf/self_hosted_cuda_runner:"${IMAGE_TAG}"
 
 # Ensure jq is available (install if missing)
 if ! command -v jq >/dev/null 2>&1; then
@@ -52,7 +64,7 @@ docker run -d --restart=always --name gh-runner-flashattention \
     -e REPO_HTTPS_URL=https://github.com/gueraf/flash-attention \
     -e REPO_TOKEN="${REG_TOKEN}" \
     -e RUNNER_NAME="${DOCKER_HOST_HOSTNAME}" \
-    -e RUNNER_LABELS="self-hosted,Linux,X64,gpu,${DOCKER_HOST_HOSTNAME}" \
+    -e RUNNER_LABELS="${RUNNER_TAG_PREFIX},Linux,${RUNNER_LABELS_ARCH},gpu,${DOCKER_HOST_HOSTNAME}" \
     -e DOCKER_HOST_HOSTNAME="${DOCKER_HOST_HOSTNAME}" \
-    gueraf/self_hosted_cuda_runner:latest
+    gueraf/self_hosted_cuda_runner:"${IMAGE_TAG}"
 
