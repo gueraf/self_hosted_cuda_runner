@@ -30,11 +30,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-get update && apt-get install -y --no-install-recommends ffmpeg && \
         apt-get clean && rm -rf /var/lib/apt/lists/* ;; \
       arm64) \
+        mkdir -p /tmp/ffmpeg && \
         curl -L https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-arm64-static.tar.xz -o /tmp/ffmpeg-git-arm64-static.tar.xz && \
-        tar -xf /tmp/ffmpeg-git-arm64-static.tar.xz -C /tmp/ && \
-        mv /tmp/ffmpeg-git-arm64-static/ffmpeg /usr/local/bin/ffmpeg && \
-        mv /tmp/ffmpeg-git-arm64-static/ffprobe /usr/local/bin/ffprobe && \
-        rm -rf /tmp/ffmpeg-git-arm64-static.tar.xz /tmp/ffmpeg-git-arm64-static ;; \
+        tar -xf /tmp/ffmpeg-git-arm64-static.tar.xz -C /tmp/ffmpeg --strip-components=1 && \
+        mv /tmp/ffmpeg/ffmpeg /usr/local/bin/ffmpeg && \
+        mv /tmp/ffmpeg/ffprobe /usr/local/bin/ffprobe && \
+        rm -rf /tmp/ffmpeg-git-arm64-static.tar.xz /tmp/ffmpeg ;; \
       *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
     esac && \
     ffmpeg -version && \
