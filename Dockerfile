@@ -58,6 +58,9 @@ RUN ./bin/installdependencies.sh && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Switch to non-root user
 USER runner
 
+RUN wget -qO- https://astral.sh/uv/install.sh | sh
+RUN which uv
+
 ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; if [ -n \"$RUNNER_NAME\" ]; then NAME_ARG=\"--name $RUNNER_NAME\"; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN $NAME_ARG && ./run.sh"]
 
 # Usage (persistent background runner; requires env vars & auto restart):
