@@ -8,7 +8,7 @@ ARG RUNNER_SHA256_ARM64=56768348b3d643a6a29d4ad71e9bdae0dc0ef1eb01afe0f7a8ee097b
 ARG TARGETARCH
 
 # Expect REPO_HTTPS_URL and REPO_TOKEN to be provided at runtime via docker run -e
-# COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Create a non-root user for running the GitHub Actions runner
 RUN groupadd -r runner && useradd -m -r -g runner runner
@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libgl1 \
       libglib2.0-0 && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    uv --version && \
     case ${TARGETARCH} in \
       amd64) \
         apt-get update && apt-get install -y --no-install-recommends ffmpeg && \
@@ -57,9 +58,6 @@ WORKDIR /actions-runner
 RUN ./bin/installdependencies.sh && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Switch to non-root user
 USER runner
-
-RUN wget -qO- https://astral.sh/uv/install.sh | sh
-RUN which uv
 
 ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; if [ -n \"$RUNNER_NAME\" ]; then NAME_ARG=\"--name $RUNNER_NAME\"; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN $NAME_ARG && ./run.sh"]
 
