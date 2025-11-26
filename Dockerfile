@@ -16,8 +16,6 @@ RUN groupadd -r runner && useradd -m -r -g runner runner
 RUN apt-get update && apt-get install -y --no-install-recommends \
       curl \
       ca-certificates \
-      python3 \
-      python3-pip \
       libicu-dev \
       jq \
       git \
