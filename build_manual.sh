@@ -9,6 +9,6 @@ IMAGE="gueraf/self_hosted_cuda_runner"
 # docker buildx build --platform linux/amd64 -t "$IMAGE:latest" -t "$IMAGE:self-hosted" --build-arg BASE_IMAGE=nvidia/cuda:12.9.1-devel-ubuntu22.04 --push .
 # docker buildx build --platform linux/arm64 -t "$IMAGE:arm" --push .
 
-docker buildx build --platform linux/amd64 -t "$IMAGE:latest" -t "$IMAGE:self-hosted" --build-arg --push .
+docker buildx build --platform linux/amd64 -t "$IMAGE:latest" -t "$IMAGE:self-hosted" --push .
 
 echo "Done."
