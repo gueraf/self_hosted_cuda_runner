@@ -3,12 +3,23 @@ set -euo pipefail
 
 IMAGE="gueraf/self_hosted_cuda_runner"
 
+ARCH=$(uname -m)
+case $ARCH in
+    x86_64)
+        PLATFORM="linux/amd64"
+        TAG="latest"
+        ;;
+    aarch64|arm64)
+        PLATFORM="linux/arm64"
+        TAG="arm"
+        ;;
+    *)
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+        ;;
+esac
 
-# echo "Building and pushing multi-arch image $IMAGE:$TAG for platforms linux/amd64,linux/arm64"
-# docker buildx build --platform linux/amd64,linux/arm64 -t "$IMAGE:$TAG" --push .
-# docker buildx build --platform linux/amd64 -t "$IMAGE:latest" -t "$IMAGE:self-hosted" --build-arg BASE_IMAGE=nvidia/cuda:12.9.1-devel-ubuntu22.04 --push .
-# docker buildx build --platform linux/arm64 -t "$IMAGE:arm" --push .
-
-docker buildx build --platform linux/amd64 -t "$IMAGE:latest" -t "$IMAGE:self-hosted" --push .
+echo "Building and pushing for $ARCH ($PLATFORM) with tag $TAG"
+docker buildx build --platform "$PLATFORM" -t "$IMAGE:$TAG" --push .
 
 echo "Done."
