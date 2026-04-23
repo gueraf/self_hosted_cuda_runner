@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=nvidia/cuda:13.1.0-devel-ubuntu22.04
+ARG BASE_IMAGE=nvidia/cuda:13.2.1-devel-ubuntu22.04
 
 FROM ${BASE_IMAGE}
 
