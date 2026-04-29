@@ -2,9 +2,9 @@ ARG BASE_IMAGE=nvidia/cuda:13.1.0-devel-ubuntu22.04
 
 FROM ${BASE_IMAGE}
 
-ARG RUNNER_VERSION=2.333.1
-ARG RUNNER_SHA256_AMD64=18f8f68ed1892854ff2ab1bab4fcaa2f5abeedc98093b6cb13638991725cab74
-ARG RUNNER_SHA256_ARM64=69ac7e5692f877189e7dddf4a1bb16cbbd6425568cd69a0359895fac48b9ad3b
+ARG RUNNER_VERSION=2.334.0
+ARG RUNNER_SHA256_AMD64=048024cd2c848eb6f14d5646d56c13a4def2ae7ee3ad12122bee960c56f3d271
+ARG RUNNER_SHA256_ARM64=f44255bd3e80160eb25f71bc83d06ea025f6908748807a584687b3184759f7e4
 ARG TARGETARCH
 
 # Expect REPO_HTTPS_URL and REPO_TOKEN to be provided at runtime via docker run -e
@@ -59,7 +59,7 @@ RUN ./bin/installdependencies.sh && apt-get clean && rm -rf /var/lib/apt/lists/*
 # Switch to non-root user
 USER runner
 
-ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; if [ -n \"$RUNNER_NAME\" ]; then NAME_ARG=\"--name $RUNNER_NAME\"; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN $NAME_ARG && ./run.sh"]
+ENTRYPOINT ["bash","-c","if [ -z \"$REPO_HTTPS_URL\" ] || [ -z \"$REPO_TOKEN\" ]; then echo 'REPO_HTTPS_URL and REPO_TOKEN env vars are required' >&2; exit 1; fi; if [ -n \"$RUNNER_NAME\" ]; then NAME_ARG=\"--name $RUNNER_NAME\"; fi; ./config.sh --url $REPO_HTTPS_URL --token $REPO_TOKEN --disableupdate $NAME_ARG && ./run.sh"]
 
 # Usage (persistent background runner; requires env vars & auto restart):
 # docker run -d --restart=always --name gh-runner \
